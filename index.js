@@ -6,7 +6,7 @@ const consoletable = require('console.table');
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    port: 3306,
+    port: 3300,
     password: 'obomsa12',
     database: 'employees_db'
 });
@@ -104,3 +104,12 @@ async function start() {
         }
     });
 }
+
+function viewEmployees() {
+    connection.query('SELECT e.first_name, e.last_name, r.title, r.salary, d.name FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id;', 
+      function(err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+      })
+  };
