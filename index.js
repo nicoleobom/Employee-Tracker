@@ -253,3 +253,19 @@ function addRoles() {
         })
     })
 }
+
+function updateRoles() {
+    connection.query('SELECT id, first_name, last_name FROM employee;', function(error, res) {
+        if (error) throw error;
+        roleArray = [];
+        for (var i = 0; i < res.length; i++) {
+            let employee = res[i];
+            let name = `${employee.first_name} ${employee.last_name}`;
+            let info = {
+                name: empName,
+                val: employee.id
+            }
+            roleArray.push(info);
+        }
+    })
+}
