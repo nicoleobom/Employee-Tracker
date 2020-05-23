@@ -270,12 +270,14 @@ function addRoles() {
 
 function updateRoles() {
     connection.query('SELECT id, first_name, last_name FROM employee;', function(error, res) {
+        let fname;
+        let lname;
         if (error) throw error;
         roleArray = [];
         for (var i = 0; i < res.length; i++) {
             const employee = res[i];
-            const fname = `${employee.first_name}`;
-            const lname = ` ${employee.last_name}`;
+            fname = `${employee.first_name}`;
+            lname = ` ${employee.last_name}`;
             const id = `${employee.role_id}`;
             const name = `${fname} ${lname}`;
             const info = {
@@ -325,7 +327,7 @@ function updateRoles() {
                     break;
             }
 
-            connection.query(`UPDATE employee SET role_id = ${answers.role} WHERE first_name = ${fname} and last_name = ${lname};`, function(error) {
+            connection.query(`UPDATE employee SET role_id = ${answers.role} WHERE first_name = '${fname}' and last_name = '${lname}';`, function(error) {
                 if (error) throw error;
                 console.log('Updated!');
                 start();
