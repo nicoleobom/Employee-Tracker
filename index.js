@@ -269,5 +269,49 @@ function updateRoles() {
         }
 
         inquirer
+        .prompt([
+            {
+                name: 'name',
+                type: 'list',
+                message: 'Which employee do you want to update?',
+                choices: roleArray
+            },
+            {
+                name: 'role',
+                type: 'list',
+                message: 'What is his/her new role?',
+                choices: [
+                    'Account Manager',
+                    'Software Engineer',
+                    'Sales Executive',
+                    'Finance Manager',
+                    'Lawyer',
+                ]
+            }
+        ]).then(answers => {
+            switch(answers.role) {
+                case "Account Manager":
+                    answers.role = 1;
+                    break;
+                case 'Software Engineer':
+                    answers.role = 2;
+                    break;
+                case 'Sales Executive':
+                    answers.role = 3;
+                    break;
+                case 'Finance Manager':
+                    answers.role = 4;
+                    break;
+                case 'Lawyer':
+                    answers.role = 5;
+                    break;
+            }
+
+            connection.query(`UPDATE employee SET role_id = ${answers.role} WHERE id = ${amswers.name};`, function(error) {
+                if (error) throw error;
+                console.log('Updated!');
+                start();
+            })
+        })
     })
 }
