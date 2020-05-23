@@ -267,5 +267,7 @@ function updateRoles() {
             }
             roleArray.push(info);
         }
+
+        inquirer
     })
 }
