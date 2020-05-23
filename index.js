@@ -315,7 +315,7 @@ function updateRoles() {
                 }
             ]).then(answers => {
                 connection.query(`
-                UPDATE employee SET first_name = ${answers.fname}, last_name = ${answers.lname}, role_id = ${answers.role}, manager_id = ${answers.manager} WHERE id = ${id};`, function(error) {
+                UPDATE employee SET first_name = '${answers.fname}', last_name = '${answers.lname}', role_id = ${answers.role}, manager_id = ${answers.manager} WHERE id = ${id};`, function(error) {
                     if (error) throw error;
                     console.log('Updated!');
                     start();
