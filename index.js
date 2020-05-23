@@ -56,10 +56,6 @@ async function start() {
                             value: 'add_departments',
                         },
                         {
-                            name: 'Update Manager',
-                            value: 'update_manager',
-                        },
-                        {
                             name: 'Delete Employee',
                             value: 'delete_employee',
                         },
