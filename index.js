@@ -273,13 +273,14 @@ function updateRoles() {
         if (error) throw error;
         roleArray = [];
         for (var i = 0; i < res.length; i++) {
-            let employee = res[i];
-            let fname = `${employee.first_name}`;
-            let lname = ` ${employee.last_name}`;
-            let name = `${fname} ${lname}`;
-            let info = {
+            const employee = res[i];
+            const fname = `${employee.first_name}`;
+            const lname = ` ${employee.last_name}`;
+            const id = `${employee.role_id}`;
+            const name = `${fname} ${lname}`;
+            const info = {
                 name: name,
-                val: employee.id
+                value: id
             }
             roleArray.push(info);
         }
@@ -305,6 +306,7 @@ function updateRoles() {
                 ]
             }
         ]).then(answers => {
+
             switch(answers.role) {
                 case "Account Manager":
                     answers.role = 1;
