@@ -269,23 +269,75 @@ function addRoles() {
 }
 
 function updateRoles() {
-    connection.query('SELECT id, first_name, last_name FROM employee;', function(error, res) {
-        let fname;
-        let lname;
+    connection.query('SELECT * FROM employee ORDER BY id;', function(error, res) {
         if (error) throw error;
-        roleArray = [];
-        for (var i = 0; i < res.length; i++) {
-            const employee = res[i];
-            fname = `${employee.first_name}`;
-            lname = ` ${employee.last_name}`;
-            const id = `${employee.role_id}`;
-            const name = `${fname} ${lname}`;
-            const info = {
-                name: name,
-                value: id
+        console.table(res);
+        inquirer
+        .prompt(
+            {
+                name: 'employee',
+                type: 'input',
+                message: 'Enter the ID of the employee you\'d like to update.',
             }
-            roleArray.push(info);
+        ).then(answers => {
+            connection.query(`SELECT * FROM employee where id = ${parseInt(answers.employee)}`, function(error, res) {
+                if (error) throw error;
+                update(res, parseInt(answers.employee));
+            })
+        })
+
+        function update(res, id) {
+            inquirer
+            .prompt([
+                {
+                    name: 'fname',
+                    type: 'input',
+                    message: 'If updating first name, type new information here. To skip, press enter.',
+                    default: res[0].first_name,
+                },
+                {
+                    name: 'lname',
+                    type: 'input',
+                    message: 'If updating last name, type new information here. To skip, press enter.',
+                    default: res[0].last_name,
+                },
+                {
+                    name: 'role',
+                    type: 'input',
+                    message: 'If updating the role ID, type new information here. To skip, press enter.',
+                    default: res[0].role_id,
+                },
+                {
+                    name: 'manager',
+                    type: 'input',
+                    message: 'If updating the manager, type new information here. To skip, press enter.',
+                    default: res[0].manager_id,
+                }
+            ]).then(answers => {
+                connection.query(`
+                UPDATE employee SET first_name = ${answers.fname}, last_name = ${answers.lname}, role_id = ${answers.role}, manager_id = ${answers.manager} WHERE id = ${id};`, function(error) {
+                    if (error) throw error;
+                    start();
+                })
+            })
         }
+        // let fname;
+        // let lname;
+        // let id;
+        // if (error) throw error;
+        // roleArray = [];
+        // for (var i = 0; i < res.length; i++) {
+        //     const employee = res[i];
+        //     fname = `${employee.first_name}`;
+        //     lname = ` ${employee.last_name}`;
+        //     id = `${employee.id}`;
+        //     const name = `${fname} ${lname}`;
+        //     const info = {
+        //         name: name,
+        //         value: id
+        //     }
+        //     roleArray.push(info);
+        // }
 
         inquirer
         .prompt([
@@ -327,7 +379,7 @@ function updateRoles() {
                     break;
             }
 
-            connection.query(`UPDATE employee SET role_id = ${answers.role} WHERE first_name = '${fname}' and last_name = '${lname}';`, function(error) {
+            connection.query(`UPDATE employee SET role_id = ${answers.role} WHERE id = ${id};`, function(error) {
                 if (error) throw error;
                 console.log('Updated!');
                 start();
