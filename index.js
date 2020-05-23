@@ -269,6 +269,7 @@ function addRoles() {
 }
 
 function updateRoles() {
+
     connection.query('SELECT * FROM employee ORDER BY id;', function(error, res) {
         if (error) throw error;
         console.table(res);
@@ -284,9 +285,8 @@ function updateRoles() {
                 if (error) throw error;
                 update(res, parseInt(answers.employee));
             })
-        })
 
-        function update(res, id) {
+            function update(res, id) {
             inquirer
             .prompt([
                 {
@@ -319,26 +319,10 @@ function updateRoles() {
                     if (error) throw error;
                     console.log('Updated!');
                     start();
-                })
+                    })
             })
-        }
-        // let fname;
-        // let lname;
-        // let id;
-        // if (error) throw error;
-        // roleArray = [];
-        // for (var i = 0; i < res.length; i++) {
-        //     const employee = res[i];
-        //     fname = `${employee.first_name}`;
-        //     lname = ` ${employee.last_name}`;
-        //     id = `${employee.id}`;
-        //     const name = `${fname} ${lname}`;
-        //     const info = {
-        //         name: name,
-        //         value: id
-        //     }
-        //     roleArray.push(info);
-        // }
+            }
+        })
 
         inquirer
         .prompt([
