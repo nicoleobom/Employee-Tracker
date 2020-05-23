@@ -60,6 +60,18 @@ async function start() {
                             value: 'update_manager',
                         },
                         {
+                            name: 'Delete Employee',
+                            value: 'delete_employee',
+                        },
+                        {
+                            name: 'Delete Department',
+                            value: 'delete_department',
+                        },
+                        {
+                            name: 'Delete Role',
+                            value: 'delete_role',
+                        },
+                        {
                             name: 'Quit',
                             value: 'quit'
                         }]
@@ -87,11 +99,17 @@ async function start() {
                     case 'add_departments':
                         addDepartments();
                         break;
-                    case 'update_manager':
-                        updateManager();
+                    case 'delete_employee':
+                        deleteEmployee();
+                        break;
+                    case 'delete_department':
+                        deleteDepartment();
+                        break;
+                    case 'delete_role':
+                        deleteRole();
                         break;
                     case 'quit':
-                        quit();
+                        connection.end();
                         break;
                 }
             });
@@ -260,7 +278,9 @@ function updateRoles() {
         roleArray = [];
         for (var i = 0; i < res.length; i++) {
             let employee = res[i];
-            let name = `${employee.first_name} ${employee.last_name}`;
+            let fname = `${employee.first_name}`;
+            let lname = ` ${employee.last_name}`;
+            let name = `${fname} ${lname}`;
             let info = {
                 name: name,
                 val: employee.id
@@ -307,7 +327,7 @@ function updateRoles() {
                     break;
             }
 
-            connection.query(`UPDATE employee SET role_id = ${answers.role} WHERE id = ${answers.name};`, function(error) {
+            connection.query(`UPDATE employee SET role_id = ${answers.role} WHERE first_name = ${fname} and last_name = ${lname};`, function(error) {
                 if (error) throw error;
                 console.log('Updated!');
                 start();
@@ -332,7 +352,6 @@ function addDepartments() {
         name: "department",
         type: "input",
         message: "What is the name of the department that you would like to add?",
-        validate: validateEntry
       }
     ])
     .then(answers => {
@@ -344,4 +363,70 @@ function addDepartments() {
         }
       );
     });
+}
+
+function deleteEmployee() {
+    connection.query('SELECT * FROM employee;', function(error, res) {
+        if (error) throw error;
+        console.table(res);
+    });
+
+    inquirer
+    .prompt([
+        {
+            name: 'employeeID',
+            type: 'input',
+            message: 'What is the ID of the employee you would like to delete? *** Note that this will delete the employee. To back out, press CTRL + C ***',
+        }
+    ]).then(answers => {
+        connection.query(`DELETE FROM employee WHERE id = ${parseInt(answers.employeeID)}`, function(error) {
+            if (error) throw error;
+            console.log(`Employee ID# ${answers.employeeID} successfully deleted.`);
+            start();
+        })
+    })
+}
+
+function deleteDepartment() {
+    connection.query('SELECT * FROM department;', function(error, res) {
+        if (error) throw error;
+        console.table(res);
+    });
+
+    inquirer
+    .prompt([
+        {
+            name: 'departmentID',
+            type: 'input',
+            message: 'What is the ID of the department you would like to delete? *** Note that this will delete the employee. To back out, press CTRL + C ***',
+        }
+    ]).then(answers => {
+        connection.query(`DELETE FROM department WHERE id = ${parseInt(answers.departmentID)}`, function(error) {
+            if (error) throw error;
+            console.log(`Employee ID# ${answers.departmentID} successfully deleted.`);
+            start();
+        })
+    })
+}
+
+function deleteRole() {
+    connection.query('SELECT * FROM role;', function(error, res) {
+        if (error) throw error;
+        console.table(res);
+    });
+
+    inquirer
+    .prompt([
+        {
+            name: 'roleID',
+            type: 'input',
+            message: 'What is the ID of the role you would like to delete? *** Note that this will delete the employee. To back out, press CTRL + C ***',
+        }
+    ]).then(answers => {
+        connection.query(`DELETE FROM role WHERE id = ${parseInt(answers.roleID)}`, function(error) {
+            if (error) throw error;
+            console.log(`Employee ID# ${answers.roleID} successfully deleted.`);
+            start();
+        })
+    })
 }
