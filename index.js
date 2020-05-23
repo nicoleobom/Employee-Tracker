@@ -196,8 +196,8 @@ function addEmployees() {
 
 function viewRoles() {
     connection.query('SELECT * FROM role',
-    function (err, res) {
-        if (err) throw err;
+    function (error, res) {
+        if (error) throw error;
         console.table(res);
         start();
     });
@@ -262,7 +262,7 @@ function updateRoles() {
             let employee = res[i];
             let name = `${employee.first_name} ${employee.last_name}`;
             let info = {
-                name: empName,
+                name: name,
                 val: employee.id
             }
             roleArray.push(info);
@@ -307,7 +307,7 @@ function updateRoles() {
                     break;
             }
 
-            connection.query(`UPDATE employee SET role_id = ${answers.role} WHERE id = ${amswers.name};`, function(error) {
+            connection.query(`UPDATE employee SET role_id = ${answers.role} WHERE id = ${answers.name};`, function(error) {
                 if (error) throw error;
                 console.log('Updated!');
                 start();
@@ -318,8 +318,8 @@ function updateRoles() {
 
 function viewDepartments() {
     connection.query('SELECT * FROM department',
-    function (err, res) {
-        if (err) throw err;
+    function (error, res) {
+        if (error) throw error;
         console.table(res);
         start();
     });
