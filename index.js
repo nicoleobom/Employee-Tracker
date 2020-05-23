@@ -56,8 +56,8 @@ async function start() {
                             value: 'add_departments',
                         },
                         {
-                            name: 'Update Departments',
-                            value: 'update_departments',
+                            name: 'Update Manager',
+                            value: 'update_manager',
                         },
                         {
                             name: 'Quit',
@@ -87,8 +87,8 @@ async function start() {
                     case 'add_departments':
                         addDepartments();
                         break;
-                    case 'update_departments':
-                        updateDepartments();
+                    case 'update_manager':
+                        updateManager();
                         break;
                     case 'quit':
                         quit();
@@ -314,4 +314,34 @@ function updateRoles() {
             })
         })
     })
+}
+
+function viewDepartments() {
+    connection.query('SELECT * FROM department',
+    function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+    });
+}
+
+function addDepartments() {
+    inquirer
+    .prompt([
+      {
+        name: "department",
+        type: "input",
+        message: "What is the name of the department that you would like to add?",
+        validate: validateEntry
+      }
+    ])
+    .then(answers => {
+      connection.query(
+        "INSERT INTO department SET ?", {"name": answers.department}, function(error) {
+          if (error) throw error;
+          console.log("Department added!");
+          start();
+        }
+      );
+    });
 }
